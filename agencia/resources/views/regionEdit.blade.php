@@ -8,7 +8,7 @@
         <!-- formulario -->
         <div class="shadow-xl rounded-md max-w-3xl mb-72">
             <form action="/region/update" method="post">
-
+            @csrf
                 <div class="p-6">
                     <div class="relative z-0 w-full mb-6 group">
                         <input type="text" name="nombre" id="nombre"

@@ -97,5 +97,89 @@ Route::get('/region/edit/{id}', function ( string $id )
 });
 Route::post('/region/update', function ()
 {
-
+    $nombre = request()->nombre;
+    $idRegion = request()->idRegion;
+    try {
+        DB::table('regiones')
+                ->where('idRegion', $idRegion)
+                ->update(
+                    [ 'nombre'=>$nombre ]
+                );
+        return redirect('/regiones')
+            ->with(
+                [
+                    'css'=>'green',
+                    'mensaje'=>'Region: '.$nombre.' modificada correctamente'
+                ]
+            );
+    }catch ( Throwable $th){
+        // app de log
+        return redirect('/regiones')
+            ->with(
+                [
+                    'css'=>'red',
+                    'mensaje'=>'No se pudo modificar la región: '.$nombre
+                ]
+            );
+    }
 });
+
+/*#########################*/
+##### CRUD de destinos
+Route::get('/destinos', function ()
+{
+    //obtenemos listado de retinos
+    // raw SQL
+    /* $destinos = DB::select(
+                    'SELECT *
+                        FROM destinos AS d
+                        JOIN regiones r
+                          ON d.idRegion = r.idRegion'
+                    ); */
+    // Query Builder
+    $destinos = DB::table('destinos as d')
+                        ->join('regiones as r', 'd.idRegion', '=', 'r.idRegion')
+                        ->orderBy('d.idDestino', 'desc')
+                        ->get();
+    return view('/destinos', [ 'destinos'=>$destinos ]);
+});
+Route::get('/destino/create', function ()
+{
+    //obtenemos listado de regiones
+    $regiones = DB::table('regiones')->get();
+    return view('destinoCreate', [ 'regiones'=>$regiones ]);
+});
+Route::post('/destino/store', function ()
+{
+    $aeropuerto = request()->aeropuerto;
+    $precio = request()->precio;
+    $idRegion = request()->idRegion;
+    try {
+        DB::table('destinos')
+                ->insert(
+                    [
+                        'aeropuerto'=>$aeropuerto,
+                        'precio'=>$precio,
+                        'idRegion'=>$idRegion
+                    ]
+                );
+        return redirect('/destinos')
+                    ->with(
+                            [
+                                'mensaje'=>'Destino: '.$aeropuerto.' agregado correctamente',
+                                'css'=>'green'
+                            ]
+                    );
+    }
+    catch ( Throwable $th ){
+        return redirect('/destinos')
+            ->with(
+                [
+                    'mensaje'=>'No se pudo agregar el destino '.$aeropuerto,
+                    'css'=>'red'
+                ]
+            );
+    }
+});
+
+
