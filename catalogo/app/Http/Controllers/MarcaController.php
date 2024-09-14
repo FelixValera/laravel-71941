@@ -12,7 +12,10 @@ class MarcaController extends Controller
      */
     public function index()
     {
-        //
+        // Obtenemos el listado de las marcas
+        $marcas = Marca::orderBy('idMarca', 'desc')
+                          ->paginate(6);
+        return view('marcas', [ 'marcas'=>$marcas ]);
     }
 
     /**
@@ -20,7 +23,23 @@ class MarcaController extends Controller
      */
     public function create()
     {
-        //
+        return view('marcaCreate');
+    }
+
+    private function validarForm( Request $request )
+    {
+        $request->validate(
+            //[ 'campo' => 'regla1|regla2' ]
+            [
+                'mkNombre'=>'required|unique:marcas,mkNombre|min:2|max:20'
+            ],
+            [
+                'mkNombre.required'=>'Complete el campo "Nombre de la marca"',
+                'mkNombre.unique'=>'Ya existe una marca con ese nombre',
+                'mkNombre.min'=>'El campo "Nombre de la marca" debe tener al menos dos caracteres',
+                'mkNombre.max'=>'El campo "Nombre de la marca" debe tener 20 caracteres como máximo'
+            ]
+        );
     }
 
     /**
@@ -28,7 +47,30 @@ class MarcaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $mkNombre = $request->mkNombre;
+        //validación
+        $this->validarForm( $request );
+        try {
+            $marca = new Marca; //instanciamos
+            $marca->mkNombre = $mkNombre;
+            $marca->save(); // almacenamos en tabla
+            return redirect('/marcas')
+                        ->with(
+                            [
+                                'mensaje'=>'Marca: '.$mkNombre.' agregada correctamente',
+                                'css'=>'green'
+                            ]
+                        );
+        }
+        catch ( Throwable $th ){
+            return redirect('/marcas')
+                ->with(
+                    [
+                        'mensaje'=>'No se pudo agregar la marca: '.$mkNombre,
+                        'css'=>'red'
+                    ]
+                );
+        }
     }
 
     /**
