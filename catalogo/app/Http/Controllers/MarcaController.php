@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Marca;
+use App\Models\Producto;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use function Termwind\render;
 
 class MarcaController extends Controller
 {
@@ -52,7 +56,7 @@ class MarcaController extends Controller
         $this->validarForm( $request );
         try {
             $marca = new Marca; //instanciamos
-            $marca->mkNombre = $mkNombre;
+            $marca->mkNombre = $mkNombre; // asignamos atributos
             $marca->save(); // almacenamos en tabla
             return redirect('/marcas')
                         ->with(
@@ -62,7 +66,8 @@ class MarcaController extends Controller
                             ]
                         );
         }
-        catch ( Throwable $th ){
+        //catch ( Throwable $th ){
+        catch ( QueryException $th ){
             return redirect('/marcas')
                 ->with(
                     [
@@ -84,17 +89,74 @@ class MarcaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Marca $marca)
+    public function edit( string $id )
     {
-        //
+        //Obtenemos los datos de una marca filtrada por su ID
+        //$marca = Marca::where('idMarca', $id)->first();
+        $marca = Marca::find($id);
+        return view('marcaEdit', [ 'marca'=>$marca ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Marca $marca)
+    public function update(Request $request)
     {
-        //
+        $mkNombre = $request->mkNombre;
+        $idMarca = $request->idMarca;
+
+        $this->validarForm( $request );
+        try {
+            $marca = Marca::find($idMarca);
+            $marca->mkNombre = $mkNombre; // asignamos atributos
+            $marca->save(); // almacenamos en tabla
+            return redirect('/marcas')
+                ->with(
+                    [
+                        'mensaje'=>'Marca: '.$mkNombre.' modificada correctamente',
+                        'css'=>'green'
+                    ]
+                );
+        }
+        //catch ( Throwable $th ){
+        catch ( QueryException $th ){
+            return redirect('/marcas')
+                ->with(
+                    [
+                        'mensaje'=>'No se pudo modificar la marca: '.$mkNombre,
+                        'css'=>'red'
+                    ]
+                );
+        }
+    }
+
+    private function chekProductoPorMarca( int $idMarca)
+    {
+        // objeto | null
+        /* $check = DB::table('productos')
+                        ->where('idMarca', $idMarca)
+                        ->first(); */
+        // int
+        $check = DB::table('productos')
+                        ->where('idMarca', $idMarca)
+                        ->count();
+        return $check;
+    }
+
+    public function delete( string $id )
+    {
+        //Obtenemos datos de la marca filtrada por su ID
+        $marca = Marca::find($id);
+        if( Producto::chekProductoPorMarca($id) ){
+            return redirect('/marcas')
+                        ->with(
+                            [
+                                'mensaje'=>'No se puede eliminar la marca: '.$marca->mkNombre. ' porque tienen productos relacionados',
+                                'css'=>'yellow'
+                            ]
+                        );
+        }
+        return view('marcaDelete', [ 'marca'=>$marca ]);
     }
 
     /**
