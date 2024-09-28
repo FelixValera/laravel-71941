@@ -9,10 +9,29 @@ class Producto extends Model
 {
     use HasFactory;
 
-    static function chekProductoPorMarca( int $idMarca )
+    static function chekProductoPorMarca( int $idMarca ) : int
     {
         //obj | null
         // return Producto::where('idMarca', $idMarca)->first();
         return Producto::where('idMarca', $idMarca)->count();
+    }
+
+    //métodos de relación
+    public function getMarca()
+    {
+        return $this->belongsTo(
+                    Marca::class,
+                   'idMarca',
+                    'idMarca'
+        );
+    }
+
+    public function getCategoria()
+    {
+        return $this->belongsTo(
+                Categoria::class,
+                'idCategoria',
+                'idCategoria'
+        );
     }
 }
