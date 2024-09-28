@@ -32,7 +32,7 @@
                 <select name="idMarca" id="idMarca" class="block py-2.5 px-0 w-full text-2xl text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-teal-400 dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer" placeholder=" ">
                     <option value="">Seleccione una marca</option>
             @foreach( $marcas as $marca )
-                        <option value="{{ old($marca->idMarca) }}">{{ $marca->mkNombre }}</option>
+                        <option  @selected($marca->idMarca == old('idMarca')) value="{{ $marca->idMarca }}">{{ $marca->mkNombre }}</option>
             @endforeach
                 </select>
                 <label for="idMarca" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-teal-600 peer-focus:dark:text-teal-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Marca del producto</label>
@@ -45,7 +45,7 @@
                 <select name="idCategoria" id="idCategoria" class="block py-2.5 px-0 w-full text-2xl text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-teal-400 dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer" placeholder=" ">
                     <option value="">Seleccione una categoría</option>
             @foreach( $categorias as $categoria )
-                        <option value="{{ old($categoria->idCategoria) }}">{{ $categoria->catNombre }}</option>
+                        <option @selected($categoria->idCategoria == old('idCategoria')) value="{{ $categoria->idCategoria }}">{{ $categoria->catNombre }}</option>
             @endforeach
                 </select>
                 <label for="idCategoria" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-teal-600 peer-focus:dark:text-teal-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Categoría del producto</label>

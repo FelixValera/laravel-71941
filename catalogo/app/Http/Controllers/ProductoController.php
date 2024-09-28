@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductoRequest;
 use App\Models\Categoria;
 use App\Models\Marca;
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class ProductoController extends Controller
@@ -40,7 +42,7 @@ class ProductoController extends Controller
         //[ rules ],[messages]
         $request->validate(
             [
-                'prdNombre'=>'required|unique:productos,prdNombre|min:2|max:75',
+                'prdNombre'=>'required|'.Rule::unique('productos').'|min:2|max:75',
                 'prdPrecio'=>'required|decimal:2|min:0',
                 'idMarca'=>'required|exists:marcas,idMarca',
                 'idCategoria'=>'required|exists:categorias,idCategoria',
@@ -53,7 +55,7 @@ class ProductoController extends Controller
                 'prdNombre.min'=>'El campo "Nombre de producto" debe tener como mínimo 2 caractéres.',
                 'prdNombre.max'=>'El campo "Nombre de producto" debe tener 75 caractéres como máximo.',
                 'prdPrecio.required'=>'Complete el campo Precio.',
-                'prdPrecio.numeric'=>'Complete el campo Precio con un número que tenga como máximo dos decimales.',
+                'prdPrecio.decimal'=>'Complete el campo Precio con un número que tenga como máximo dos decimales.',
                 'prdPrecio.min'=>'Complete el campo Precio con un número mayor a 0.',
                 'idMarca.required'=>'Seleccione una marca.',
                 'idMarca.exists'=>'Seleccione una marca existente',
@@ -69,11 +71,12 @@ class ProductoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store( ProductoRequest $request )
     {
         $prdNombre = $request->prdNombre;
         // validación
-
+        //$this->validarForm($request);
+        return 'Pasó la validación';
     }
 
     /**
