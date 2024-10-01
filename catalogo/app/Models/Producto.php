@@ -15,4 +15,12 @@ class Producto extends Model
         // return Producto::where('idMarca', $idMarca)->first();
         return Producto::where('idMarca', $idMarca)->count();
     }
+
+    static function chekProductoPorCategoria( int $idCategoria){
+
+        return Producto::where('idCategoria',$idCategoria)->count();
+    }
 }
+
+
+

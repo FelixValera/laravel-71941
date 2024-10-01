@@ -130,18 +130,21 @@ class MarcaController extends Controller
         }
     }
 
+    /* Esta funcionalidad se paso al modelo "Producto" ya que es mas optimo que el modelo se encarge de las
+    consultas a la DB
     private function chekProductoPorMarca( int $idMarca)
     {
         // objeto | null
-        /* $check = DB::table('productos')
+        $check = DB::table('productos')
                         ->where('idMarca', $idMarca)
-                        ->first(); */
+                        ->first(); 
         // int
         $check = DB::table('productos')
                         ->where('idMarca', $idMarca)
                         ->count();
         return $check;
     }
+    */
 
     public function delete( string $id )
     {
