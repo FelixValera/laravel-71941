@@ -68,6 +68,28 @@ class ProductoController extends Controller
         );
     }
 
+    private function subirImagen(Request $request) : string
+    {
+        // si no enviaron imagen en  productoCeate
+        $prdImagen = 'noDisponible.svg';
+
+        // si NO enviaron imagen en productoEdit
+        if( $request->has('imgActual') ){
+            $prdImagen = $request->imgActual;
+        }
+
+        //si enviaron imagen
+        if( $request->file('prdImagen') ){
+            $file = $request->file('prdImagen');
+            /* renombramos archivo */
+            $time = time();
+            $extension = $file->getClientOriginalExtension();
+            $prdImagen = $time.'.'.$extension;
+            $file->move( public_path('/imgs/productos'), $prdImagen );
+        }
+        return $prdImagen;
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -76,7 +98,37 @@ class ProductoController extends Controller
         $prdNombre = $request->prdNombre;
         // validación
         //$this->validarForm($request);
-        return 'Pasó la validación';
+        $prdImagen = $this->subirImagen($request);
+
+        try {
+            //instanciamos
+            $producto = new Producto;
+            // asignamos atributos
+            $producto->prdNombre = $prdNombre;
+            $producto->prdPrecio = $request->prdPrecio;
+            $producto->idMarca = $request->idMarca;
+            $producto->idCategoria = $request->idCategoria;
+            $producto->prdDescripcion = $request->prdDescripcion;
+            $producto->prdImagen = $prdImagen;
+            //almacenamos en tabla productos
+            $producto->save();
+            return redirect('/productos')
+                        ->with(
+                            [
+                                'mensaje'=>'Producto: '.$prdNombre.' agregado correctamente',
+                                'css'=>'green'
+                            ]
+                        );
+        }
+        catch( Throwable $th ){
+            return redirect('/productos')
+                ->with(
+                    [
+                        'mensaje'=>'No se pudo agregar el producto: '.$prdNombre,
+                        'css'=>'red'
+                    ]
+                );
+        }
     }
 
     /**
@@ -92,15 +144,55 @@ class ProductoController extends Controller
      */
     public function edit(Producto $producto)
     {
-        //
+        $marcas = Marca::all();
+        $categorias = Categoria::all();
+        return view('productoEdit',
+                        [
+                            'producto'=>$producto,
+                            'marcas'=>$marcas,
+                            'categorias'=>$categorias
+                        ]
+                    );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Producto $producto)
+    public function update(ProductoRequest $request, Producto $producto)
     {
-        //
+        //$request: lo que envió el form (puede tener modificaciones)
+        // $producto: el objeto de la tabla SIN MODIFICACIONES
+        $prdNombre = $request->prdNombre;
+        $prdImagen = $this->subirImagen( $request );
+        try {
+            //instanciamos
+            //$producto = Producto::find($request->idProducto);
+            // asignamos atributos
+            $producto->prdNombre = $prdNombre;
+            $producto->prdPrecio = $request->prdPrecio;
+            $producto->idMarca = $request->idMarca;
+            $producto->idCategoria = $request->idCategoria;
+            $producto->prdDescripcion = $request->prdDescripcion;
+            $producto->prdImagen = $prdImagen;
+            //almacenamos en tabla productos
+            $producto->save();
+            return redirect('/productos')
+                ->with(
+                    [
+                        'mensaje'=>'Producto: '.$prdNombre.' modificado correctamente',
+                        'css'=>'green'
+                    ]
+                );
+        }
+        catch( Throwable $th ){
+            return redirect('/productos')
+                ->with(
+                    [
+                        'mensaje'=>'No se pudo modificar el producto: '.$prdNombre,
+                        'css'=>'red'
+                    ]
+                );
+        }
     }
 
     /**
