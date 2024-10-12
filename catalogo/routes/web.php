@@ -26,6 +26,9 @@ Route::delete('/marca/destroy', [ MarcaController::class, 'destroy' ]);
 Route::get('/productos', [ ProductoController::class, 'index' ]);
 Route::get('/producto/create', [ ProductoController::class, 'create' ]);
 Route::post('/producto/store', [ ProductoController::class, 'store' ]);
+Route::get('/producto/edit/{producto}', [ ProductoController::class, 'edit' ]);
+Route::patch('/producto/update/{producto}', [ ProductoController::class, 'update' ]);
+
 
 /*
  *  CRUD de categorias

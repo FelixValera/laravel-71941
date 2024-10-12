@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class ProductoRequest extends FormRequest
@@ -20,11 +21,11 @@ class ProductoRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules(Request $request): array
     {
         return [
-            'prdNombre'=>'required|'.Rule::unique('productos').'|min:2|max:75',
-            'prdPrecio'=>'required|decimal:2|min:0',
+            'prdNombre'=>'required|'.Rule::unique('productos')->ignore($request->idProducto, 'idProducto').'|min:2|max:75',
+            'prdPrecio'=>'required|decimal:0,2|min:0',
             'idMarca'=>'required|exists:marcas,idMarca',
             'idCategoria'=>'required|exists:categorias,idCategoria',
             'prdDescripcion'=>'max:1000',
