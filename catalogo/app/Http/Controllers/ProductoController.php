@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Http\Requests\ProductoRequest;
 use App\Models\Categoria;
 use App\Models\Marca;
@@ -68,7 +67,7 @@ class ProductoController extends Controller
         );
     }
 
-    private function subirImagen(Request $request) : string
+    private function subirImagen(Request $request,Producto $producto=null) : string
     {
         // si no enviaron imagen en  productoCeate
         $prdImagen = 'noDisponible.svg';
@@ -80,6 +79,15 @@ class ProductoController extends Controller
 
         //si enviaron imagen
         if( $request->file('prdImagen') ){
+            
+            //si es un update tenemos que borrar la imagenOld en el directory
+            if($producto){
+
+                $imagenOld = $producto->prdImagen;
+                
+                unlink( public_path("imgs/productos/$imagenOld") );
+            }
+
             $file = $request->file('prdImagen');
             /* renombramos archivo */
             $time = time();
@@ -87,6 +95,7 @@ class ProductoController extends Controller
             $prdImagen = $time.'.'.$extension;
             $file->move( public_path('/imgs/productos'), $prdImagen );
         }
+        
         return $prdImagen;
     }
 
@@ -163,7 +172,7 @@ class ProductoController extends Controller
         //$request: lo que envió el form (puede tener modificaciones)
         // $producto: el objeto de la tabla SIN MODIFICACIONES
         $prdNombre = $request->prdNombre;
-        $prdImagen = $this->subirImagen( $request );
+        $prdImagen = $this->subirImagen($request,$producto);
         try {
             //instanciamos
             //$producto = Producto::find($request->idProducto);
@@ -195,11 +204,57 @@ class ProductoController extends Controller
         }
     }
 
+    /*
+        show delete product
+     */
+    public function delete(Producto $producto){
+        $marca = marca::all();
+        $categoria = Categoria::all();
+
+        return view('productoDelete',
+        [
+            'producto'=>$producto,
+            'marcas'=>$marca,
+            'categorias'=>$categoria
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Producto $producto)
+    public function destroy(Request $request)
     {
-        //
+        $imgActual = $request->imgActual;
+        $idProducto = $request->idProducto;
+        $prdNombre = $request->prdNombre;
+
+        //si es distinto a la img por default se elimina
+        if($imgActual != 'noDisponible.svg'){ 
+
+            unlink(public_path("imgs/productos/$imgActual"));
+        }
+
+        try{
+
+            Producto::destroy($idProducto);
+            return redirect('/productos')
+            ->with(
+                [
+                    'mensaje'=>'Producto: '.$prdNombre.' eliminado correctamente',
+                    'css'=>'green'
+                ]
+            );
+
+        }catch (QueryException $q){
+
+            return redirect('/productos')
+            ->with(
+                [
+                    'mensaje'=>'No se pudo eliminar el producto: '.$prdNombre,
+                    'css'=>'red'
+                ]
+            );
+        }
     }
+
 }

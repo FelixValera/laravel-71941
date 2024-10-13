@@ -4,11 +4,10 @@
     <div class="mx-auto max-w-4xl py-12 px-8">
 
         <h1 class="text-2xl font-bold">Panel de administración de productos</h1>
-
+        
         @if( session('mensaje') )
             <x-alert></x-alert>
         @endif
-
 
         <div class="shadow-md sm:rounded-lg">
             <table class="w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
@@ -81,13 +80,10 @@
             </table>
 
             <div class="w-2/3 mx-auto mt-8">
-                {{ $productos->links() }}
+               {{ $productos->links() }}
             </div>
 
         </div>
-
-
-
     </div>
 </main>
 

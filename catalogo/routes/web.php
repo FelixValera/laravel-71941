@@ -28,7 +28,8 @@ Route::get('/producto/create', [ ProductoController::class, 'create' ]);
 Route::post('/producto/store', [ ProductoController::class, 'store' ]);
 Route::get('/producto/edit/{producto}', [ ProductoController::class, 'edit' ]);
 Route::patch('/producto/update/{producto}', [ ProductoController::class, 'update' ]);
-
+Route::get('/producto/delete/{producto}',[ProductoController::class,'delete']);
+Route::delete('/producto/destroy',[ProductoController::class,'destroy']);
 
 /*
  *  CRUD de categorias

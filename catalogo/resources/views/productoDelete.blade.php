@@ -3,80 +3,68 @@
 <main>
     <div class="mx-auto max-w-4xl py-12 px-8">
 
-        <h1 class="text-2xl font-bold">Alta de un producto</h1>
+        <h1 class="text-2xl font-bold">Baja de un producto</h1>
 
 
-        <form action="/producto/store" method="post" enctype="multipart/form-data">
+        <form action="/producto/destroy" method="post" enctype="multipart/form-data">
             @csrf
+            @method('delete')
             <div class="relative z-0 w-full mb-6 group">
-                <input type="text" name="prdNombre" id="prdNombre"
+                <input disabled type="text" name="prdNombre" id="prdNombre"
                        class="block py-2.5 px-0 w-full text-2xl text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-teal-400 dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer" placeholder=" "
-                       value="{{ old('prdNombre') }}">
+                       value="{{ $producto->prdNombre }}">
                 <label for="prdNombre" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-teal-600 peer-focus:dark:text-teal-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nombre del producto</label>
-                @if ($errors->has('prdNombre'))
-                    <span class="text-sm text-rose-400">{{ $errors->first('prdNombre') }}</span>
-                @endif
             </div>
 
             <div class="relative z-0 w-full mb-6 mt-2 group">
-                <input type="text" name="prdPrecio" id="prdPrecio"
+                <input disabled type="text" name="prdPrecio" id="prdPrecio"
                        class="block py-2.5 px-0 w-full text-2xl text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-teal-400 dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer" placeholder=" "
-                       value="{{ old('prdPrecio') }}">
+                       value="{{ $producto->prdPrecio }}">
                 <label for="prdPrecio" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-teal-600 peer-focus:dark:text-teal-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Precio del producto</label>
-                @if ($errors->has('prdPrecio'))
-                    <span class="text-sm text-rose-400">{{ $errors->first('prdPrecio') }}</span>
-                @endif
             </div>
 
             <div class="relative z-0 w-full mb-6 group">
-                <select name="idMarca" id="idMarca" class="block py-2.5 px-0 w-full text-2xl text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-teal-400 dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer" placeholder=" ">
-                    <option value="">Seleccione una marca</option>
-            @foreach( $marcas as $marca )
-                        <option  @selected($marca->idMarca == old('idMarca')) value="{{ $marca->idMarca }}">{{ $marca->mkNombre }}</option>
-            @endforeach
+                <select disabled name="idMarca" id="idMarca" class="block py-2.5 px-0 w-full text-2xl text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-teal-400 dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer" placeholder=" ">
+                @foreach( $marcas as $marca )
+                        <option @selected( $marca->idMarca == $producto->idMarca ) value="{{ $marca->idMarca }}">{{  $marca->mkNombre }}</option>
+                @endforeach
                 </select>
                 <label for="idMarca" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-teal-600 peer-focus:dark:text-teal-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Marca del producto</label>
-                @if ($errors->has('idMarca'))
-                    <span class="text-sm text-rose-400">{{ $errors->first('idMarca') }}</span>
-                @endif
             </div>
 
             <div class="relative z-0 w-full mb-6 group">
-                <select name="idCategoria" id="idCategoria" class="block py-2.5 px-0 w-full text-2xl text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-teal-400 dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer" placeholder=" ">
-                    <option value="">Seleccione una categoría</option>
-            @foreach( $categorias as $categoria )
-                        <option @selected($categoria->idCategoria == old('idCategoria')) value="{{ $categoria->idCategoria }}">{{ $categoria->catNombre }}</option>
-            @endforeach
+                <select disabled name="idCategoria" id="idCategoria" class="block py-2.5 px-0 w-full text-2xl text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-teal-400 dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer" placeholder=" ">
+                @foreach( $categorias as $categoria )
+                        <option @selected( $categoria->idCategoria == $producto->idCategoria ) value="{{ $categoria->idCategoria }}">{{ $categoria->catNombre }}</option>
+                @endforeach
                 </select>
                 <label for="idCategoria" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-teal-600 peer-focus:dark:text-teal-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Categoría del producto</label>
-                @if ($errors->has('idCategoria'))
-                    <span class="text-sm text-rose-400">{{ $errors->first('idCategoria') }}</span>
-                @endif
             </div>
 
             <div class="relative z-0 w-full mb-6 group">
-                            <textarea name="prdDescripcion" id="prdDescripcion" rows="2" class="resize-none block py-2.5 px-0 w-full text-2xl text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-teal-400 dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer" placeholder=" "
-                            >{{ old('prdDescripcion') }}</textarea>
+                            <textarea disabled name="prdDescripcion" id="prdDescripcion" rows="2" class="resize-none block py-2.5 px-0 w-full text-2xl text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-teal-400 dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer" placeholder=" "
+                            >{{ $producto->prdDescripcion }}</textarea>
                 <label for="prdDescripcion" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-teal-600 peer-focus:dark:text-teal-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Descripción del producto</label>
-                @if ($errors->has('prdDescripcion'))
-                    <span class="text-sm text-rose-400">{{ $errors->first('prdDescripcion') }}</span>
-                @endif
             </div>
 
-            <div class="relative z-0 w-full mb-6 group">
-                <input type="file" name="prdImagen" id="prdImagen" class="block py-2.5 px-0 w-full text-2xl text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:bg-transparent dark:text-teal-400 dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer">
-                <label for="prdImagen" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-teal-600 peer-focus:dark:text-teal-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Imagen del producto (*OPCIONAL)</label>
-                @if ($errors->has('prdImagen'))
-                    <span class="text-sm text-rose-400">{{ $errors->first('prdImagen') }}</span>
-                @endif
+            <div class="custom-file mt-1 mb-4">
+                <label for="imgActual" class="peer-focus:font-medium text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-teal-600 peer-focus:dark:text-teal-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"> Imagen actual:</label>
+                <div class="w-full flex justify-center">
+                <img src="/imgs/productos/{{ $producto->prdImagen }}" class="img-thumbnail" id="imgActual">
+                </div>
             </div>
+
+            <input type="hidden" name="imgActual"
+                   value="{{ $producto->prdImagen }}">
+            <input type="hidden" name="idProducto"
+                   value="{{ $producto->idProducto }}">
 
             <div class="flex justify-between">
                 <button type="submit" class="text-white bg-teal-800 hover:bg-teal-700 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-teal-700 dark:hover:bg-teal-600 dark:focus:ring-teal-800">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="float-left w-6 h-6 mr-2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    Agregar producto
+                    Eliminar producto
                 </button>
 
                 <a href="/productos" type="button" class="ml-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center  dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
@@ -88,7 +76,6 @@
             </div>
 
         </form>
-
 
 
     </div>
