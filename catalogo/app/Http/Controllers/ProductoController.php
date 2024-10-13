@@ -80,8 +80,12 @@ class ProductoController extends Controller
         //si enviaron imagen
         if( $request->file('prdImagen') ){
             
-            //si es un update tenemos que borrar la imagenOld en el directory
-            if($producto){
+            /*
+                si es un update tenemos que borrar la imagenOld en el directory, solo si es 
+                distinta a "noDisponible.svg"
+            */
+            
+            if($producto && ($producto->prdImagen != 'noDisponible.svg')){
 
                 $imagenOld = $producto->prdImagen;
                 
