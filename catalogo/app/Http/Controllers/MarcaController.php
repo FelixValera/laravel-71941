@@ -165,8 +165,27 @@ class MarcaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Marca $marca)
+    public function destroy( Request $request )
     {
-        //
+        $idMarca = $request->idMarca;
+        $mkNombre = $request->mkNombre;
+        try {
+            Marca::destroy($idMarca);
+            return redirect('/marcas')
+                ->with(
+                    [
+                        'mensaje'=>'Marca: '.$mkNombre.' elimnada correctamente',
+                        'css'=>'green'
+                    ]
+                );
+        }catch ( QueryException $q ){
+            return redirect('/marcas')
+                ->with(
+                    [
+                        'mensaje'=>'No se pudo eliminar la marca: '.$mkNombre,
+                        'css'=>'red'
+                    ]
+                );
+        }
     }
 }

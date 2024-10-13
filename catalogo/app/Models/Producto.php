@@ -8,17 +8,40 @@ use Illuminate\Database\Eloquent\Model;
 class Producto extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'idProducto';
+    public $timestamps = false;
 
-    static function chekProductoPorMarca( int $idMarca )
+    static function chekProductoPorMarca( int $idMarca ) : int
     {
         //obj | null
         // return Producto::where('idMarca', $idMarca)->first();
         return Producto::where('idMarca', $idMarca)->count();
     }
 
+
     static function chekProductoPorCategoria( int $idCategoria){
 
         return Producto::where('idCategoria',$idCategoria)->count();
+    }
+
+    //métodos de relación
+    public function getMarca()
+    {
+        return $this->belongsTo(
+                    Marca::class,
+                   'idMarca',
+                    'idMarca'
+        );
+    }
+
+    public function getCategoria()
+    {
+        return $this->belongsTo(
+                Categoria::class,
+                'idCategoria',
+                'idCategoria'
+        );
+
     }
 }
 
