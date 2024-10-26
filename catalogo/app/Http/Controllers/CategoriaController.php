@@ -7,11 +7,13 @@ use App\Models\Producto;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use App\Http\Requests\CategoriaRequest;
 use PDOException;
 use Throwable;
 
 class CategoriaController extends Controller
 {   
+    /* La funcion de validar se la pasamos a 'CategoriaRequest'
 
     public function validarForm($request)
     {
@@ -29,7 +31,7 @@ class CategoriaController extends Controller
             ]
         );
     }
-    
+    */
     /**
      * Display a listing of the resource.
     */
@@ -52,12 +54,10 @@ class CategoriaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoriaRequest $request)
     {
         $catNombre = $request->catNombre;
 
-        $this->validarForm($request);
-    
         try{
 
             $categoria = new Categoria;
@@ -100,13 +100,11 @@ class CategoriaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(CategoriaRequest $request)
     {
         $catNombre = $request->catNombre;
         $id = $request->idCategoria;
-
-        $this->validarForm($request);
-
+        
         try{
 
             $categoria = Categoria::find($id);

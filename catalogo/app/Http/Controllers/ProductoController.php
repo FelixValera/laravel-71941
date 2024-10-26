@@ -8,6 +8,8 @@ use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Illuminate\Database\QueryException;
+use Throwable;
 
 class ProductoController extends Controller
 {
@@ -231,16 +233,21 @@ class ProductoController extends Controller
         $imgActual = $request->imgActual;
         $idProducto = $request->idProducto;
         $prdNombre = $request->prdNombre;
-
+        
+        //si un input es 'disabled' el form no lo envia  
+        dd($prdNombre);
+        
         //si es distinto a la img por default se elimina
-        if($imgActual != 'noDisponible.svg'){ 
-
-            unlink(public_path("imgs/productos/$imgActual"));
-        }
-
         try{
 
-            Producto::destroy($idProducto);
+            $Producto = Producto::find($idProducto);
+            $Producto->delete();
+
+            if($imgActual != 'noDisponible.svg'){ 
+
+                unlink(public_path("imgs/productos/$imgActual"));
+            }
+            
             return redirect('/productos')
             ->with(
                 [
@@ -248,8 +255,17 @@ class ProductoController extends Controller
                     'css'=>'green'
                 ]
             );
+        }
+        catch(Throwable $th){
 
-        }catch (QueryException $q){
+            return redirect('/productos')->with(
+                [
+                    'mensaje'=>'No se pudo eliminar el producto: '.$prdNombre,
+                    'css'=>'red'
+                ]
+            );
+        }
+        catch(QueryException $q){
 
             return redirect('/productos')
             ->with(
